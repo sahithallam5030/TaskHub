@@ -2,12 +2,12 @@ import {createSlice,createAsyncThunk} from '@reduxjs/toolkit'
 import axios from 'axios';
 
 export const userLogin=createAsyncThunk('loginuser',async(userCredentials,thunkApi)=>{
-    console.log(userCredentials);
-    let response=await axios.post('http://localhost:4000/users/login',userCredentials);
+    let response=await axios.post('/users/login',userCredentials);
     let data=response.data;
     if(data.message==="Success"){
         let token=data.payload;
         localStorage.setItem('token',token);
+        
         return data.userObject;
     }
     else if(data.message==="Invalid user" || data.message==="Incorrect password"){
@@ -15,6 +15,16 @@ export const userLogin=createAsyncThunk('loginuser',async(userCredentials,thunkA
     }
 })
 
+export const saveToDo=createAsyncThunk('updatelist',async(todolist,thunkApi)=>{
+    let response=await axios.put('/users/update',todolist);
+    let data=response.data;
+    if(data.message==="Data updated successfully"){
+        alert('Data updated successfully');
+        return;
+    }
+    else 
+    return thunkApi.rejectWithValue(data);
+})
 export const userSlice=createSlice({
     name:'users',
     initialState:{
@@ -25,7 +35,23 @@ export const userSlice=createSlice({
         errorMsg:""
     },
     reducers:{
-
+        clearLogin:(state)=>{
+            localStorage.clear();
+            state.isSuccess=false;
+            state.isLoading=false;
+            state.isError=false;
+            state.userObj=null;
+            state.errorMsg="";
+            return state;
+        },
+        addTodo:(state,action)=>{
+            state.userObj.tasklist.push(action.payload);
+            return state;
+        },
+        deleteToDo:(state,action)=>{
+            state.userObj.tasklist=action.payload;
+            return state;
+        },
     },
     extraReducers:(builder)=>{
        builder.addCase(userLogin.pending,(state,action)=>{
@@ -42,6 +68,7 @@ export const userSlice=createSlice({
             state.isLoading=false;
             state.isError=false;
             state.errorMsg='';
+            return state;
         })
         .addCase(
         userLogin.rejected,(state,action)=>{
@@ -54,4 +81,5 @@ export const userSlice=createSlice({
     }
 })
 
+export const {clearLogin,addTodo,deleteToDo}=userSlice.actions 
 export default userSlice.reducer;

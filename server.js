@@ -3,11 +3,12 @@ const exp=require('express');
 const app=exp();
 const mclient=require('mongodb').MongoClient;
 const userApi=require('./apis/userApi')
+const path=require('path')
 const cors=require('cors');
 require('dotenv').config()
 app.use(exp.json())
 app.use(cors());
-// app.use(exp.static(path.join(__dirname,'./build')))
+app.use(exp.static(path.join(__dirname,'./build')))
 mclient.connect(process.env.DATABASE_CONNECTION_URL)
 .then((client)=>{
     let database=client.db('taskhub');
@@ -19,9 +20,9 @@ mclient.connect(process.env.DATABASE_CONNECTION_URL)
     console.log("Error occurred",error);
 })
 app.use('/users',userApi);
-// app.use("*",(request,response)=>{
-//     response.sendFile(path.join(__dirname,'./build/index.html'));
-// })
+app.use("*",(request,response)=>{
+    response.sendFile(path.join(__dirname,'./build/index.html'));
+})
 
 app.use((error,request,response,next)=>{
     console.log("Error occurred ",error);

@@ -65,7 +65,7 @@ userApp.put('/update',expressAsyncHandler(async(request,response)=>{
     let usercollection=request.app.get('usercollection');
     let userObject=request.body;
     let userOfDb=await usercollection.findOne({username:userObject.username});
-    userOfDb.tasklist=userObject.tasklist;
+    userOfDb.tasklist=userObject.todolist;
     await usercollection.updateOne({username:userObject.username},{$set:userOfDb});
     response.send({message:"Data updated successfully"});
 }))
