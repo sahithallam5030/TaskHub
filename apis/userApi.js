@@ -3,7 +3,6 @@ const userApp=exp.Router()
 const bcryptjs=require('bcryptjs')
 const jwt=require('jsonwebtoken')
 const expressAsyncHandler=require('express-async-handler');
-const verifyToken=require('../middleware/verifyToken')
 require('dotenv').config()
 
 
@@ -26,13 +25,7 @@ userApp.post('/create-user',expressAsyncHandler(async(request,response)=>{
         response.send({message:"Username already exists"});
     }
 }))
-userApp.post('/page-refresh',verifyToken,expressAsyncHandler(async(request,response)=>{
-    let usercollection=request.app.get('usercollection');
-    let userdetails=request.body;
-    let userObject=await usercollection.findOne({$and:[{username:userdetails.username},{password:userdetails.password}]})
-    response.send({payload:userObject});
 
-}))
 userApp.post('/login',expressAsyncHandler(async(request,response)=>{
     let usercollection=request.app.get('usercollection');
     let userdetails=request.body;
@@ -69,7 +62,7 @@ userApp.delete('/delete-user',expressAsyncHandler(async(request,response)=>{
         response.send({message:"Account deleted successfully"})
     }
 }))
-userApp.put('/update',verifyToken,expressAsyncHandler(async(request,response)=>{
+userApp.put('/update',expressAsyncHandler(async(request,response)=>{
     let usercollection=request.app.get('usercollection');
     let userObject=request.body;
     let userOfDb=await usercollection.findOne({username:userObject.username});

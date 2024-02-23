@@ -6,13 +6,8 @@ export const userLogin=createAsyncThunk('loginuser',async(userCredentials,thunkA
     let response=await axios.post('/users/login',userCredentials);
     let data=response.data;
     if(data.message==="Success"){
-        let duration=(+data.expiry);
-        console.log("duration ",duration);
-        let expiry=new Date().getTime()+duration;
-        console.log(expiry);
-        let token={ticket:data.payload,userdetails:userCredentials,expiry:expiry};
-        console.log(token);
-        localStorage.setItem('token',JSON.stringify(token));
+        let token=data.payload;
+        localStorage.setItem('token',token);
         
         return data.userObject;
     }
@@ -22,10 +17,7 @@ export const userLogin=createAsyncThunk('loginuser',async(userCredentials,thunkA
 })
 
 export const saveToDo=createAsyncThunk('updatelist',async(todolist,thunkApi)=>{
-    let tokendetails=localStorage.getItem('token');
-    let token=JSON.parse(tokendetails);
-    const curtime=new Date().getTime();
-    if(curtime<token.expiry){
+  
         let response=await axios.put('/users/update',todolist);
         let data=response.data;
         if(data.message==="Data updated successfully"){
@@ -34,20 +26,11 @@ export const saveToDo=createAsyncThunk('updatelist',async(todolist,thunkApi)=>{
         }
         else 
         return thunkApi.rejectWithValue(data);
-    }
-    else{
-        alert("Session expired please login to continue");
-        return;
-    }
+   return;
+
 })
 
-export const refreshPage=createAsyncThunk('pagerefesh',async(userCredentials,thunkApi)=>{
-    let token=localStorage.getItem('token');
-    let details=JSON.parse(token);
-    userCredentials={...userCredentials,headers:{Authorization:" Bearer Token"+details.ticket}}
-    let response=axios.post('/users/page-refresh',userCredentials);
-    console.log(response);
-})
+
 export const userSlice=createSlice({
     name:'users',
     initialState:{
