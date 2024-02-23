@@ -1,10 +1,11 @@
-import React from "react";
+import React,{useEffect} from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useForm } from "react-hook-form";
 import Header from "./Header";
 import { FaClipboardList } from "react-icons/fa";
 import { ImBin } from "react-icons/im";
-import { addTodo, deleteToDo, saveToDo } from "../slices/userSlice";
+
+import { addTodo, deleteToDo, saveToDo,refreshPage } from "../slices/userSlice";
 import Loading from "./sloading/Loading";
 
 function UserDashboard() {
@@ -30,12 +31,24 @@ function UserDashboard() {
   const saveList = () => {
     dispatch(saveToDo({ username: userObj.username, todolist: tasklist }));
   };
+
+  const pageRefresh=()=>{
+    let token=localStorage.getItem('token');
+    let details=JSON.parse(token);
+    const d=new Date().getTime();
+    if(details.expiry<d){
+        dispatch(refreshPage())
+    }
+  }
+  useEffect(()=>{
+      pageRefresh();
+  },[])
   return (
     <>
+      <Header />
       {isLoading === true && <Loading />}
       {isSuccess === true && (
         <>
-          <Header />
           <div className="todo-banner mb-2">
             <div>
               <h1>TODOLIST</h1>
