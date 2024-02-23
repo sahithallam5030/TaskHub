@@ -29,7 +29,6 @@ function Header() {
             <Nav.Link href="/" className='navbar-links'>Home</Nav.Link>
             <Nav.Link href="/signup" className='navbar-links'>Signup</Nav.Link>
             <Nav.Link href="/login" className='navbar-links'>Login</Nav.Link>
-            <Nav.Link href="/contact" className='navbar-links'>Contact us</Nav.Link>
             </>
             :
             <>
