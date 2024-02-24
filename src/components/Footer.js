@@ -17,7 +17,7 @@ function Footer() {
             <p><FaLocationDot/> Hyderabad</p>
             <p><IoMail/> sahithallam5030@gmail.com</p>
             <p><FaPhoneAlt/> 9059778895</p>
-            <p><FaLinkedin/> <Link className='nav-link d-inline'>Sahith Allam</Link></p>
+            <p><FaLinkedin/> <Link className='nav-link d-inline' to='https://www.linkedin.com/in/sahith-allam/'>Sahith Allam</Link></p>
           </div>
         </div>
         <p className='text-center copy'>Copyright <LuCopyright /> 2024: Design and Developed By Sahith Allam</p>
